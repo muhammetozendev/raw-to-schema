@@ -116,4 +116,95 @@ describe('Nested arrays', () => {
       },
     ]);
   });
+
+  it('should create an empty array in case of no match', () => {
+    class Book {
+      @Property({ key: 'book_id' })
+      id: number;
+
+      @Property()
+      title: string;
+    }
+
+    class Author {
+      @Property()
+      id: number;
+
+      @Property()
+      name: string;
+
+      @NestedProperty({ type: 'array', target: Book })
+      books: Book[];
+    }
+
+    const arr = [
+      {
+        id: 1,
+        name: 'Jane Smith',
+        book_id: 14,
+        title: 'My First Book',
+      },
+      {
+        id: 2,
+        name: 'John Doe',
+        book_id: 2,
+        title: 'The Great Adventure',
+      },
+      {
+        id: 1,
+        name: 'Jane Smith',
+        book_id: 16,
+        title: 'Data Science Simplified',
+      },
+      {
+        id: 1,
+        name: 'Jane Smith',
+        book_id: 8,
+        title: 'Mystery of the Python',
+      },
+      {
+        id: 3,
+        name: 'Alice Johnson',
+        book_id: null,
+        title: null,
+      },
+    ];
+
+    const result = convert(Author, arr);
+    expect(result).toEqual([
+      {
+        id: 1,
+        name: 'Jane Smith',
+        books: [
+          {
+            id: 14,
+            title: 'My First Book',
+          },
+          {
+            id: 16,
+            title: 'Data Science Simplified',
+          },
+          {
+            id: 8,
+            title: 'Mystery of the Python',
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'John Doe',
+        books: [
+          {
+            id: 2,
+            title: 'The Great Adventure',
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Alice Johnson',
+        books: [],
+      },
+    ]);
+  });
 });

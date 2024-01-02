@@ -13,6 +13,7 @@ function convertObject<T, O>(Target: ClassConstructor<T>, array: O[]): T {
   });
 
   const grouped = group(array, keys);
+  let propertyCount = 0;
 
   const instance = new Target();
   for (const key of keys) {
@@ -21,6 +22,7 @@ function convertObject<T, O>(Target: ClassConstructor<T>, array: O[]): T {
     if (field !== undefined) {
       const transformer = metadata.fields[keyMap[key]].transform;
       instance[keyMap[key]] = transformer ? transformer(field) : field;
+      if (field !== null) propertyCount++;
     }
   }
 
@@ -36,7 +38,7 @@ function convertObject<T, O>(Target: ClassConstructor<T>, array: O[]): T {
     }
   }
 
-  return Object.keys(instance).length ? instance : null;
+  return Object.keys(instance).length && propertyCount !== 0 ? instance : null;
 }
 
 export function convert<T, O>(Target: ClassConstructor<T>, array: O[]): T[] {
@@ -55,12 +57,14 @@ export function convert<T, O>(Target: ClassConstructor<T>, array: O[]): T[] {
 
   for (const group of groups) {
     const instance = new Target();
+    let propertyCount = 0;
     for (const key of keys) {
       // Create a new instance of the target class
       const field = group[0][key];
       if (field !== undefined) {
         const transformer = metadata.fields[keyMap[key]].transform;
         instance[keyMap[key]] = transformer ? transformer(field) : field;
+        if (field !== null) propertyCount++;
       }
     }
 
@@ -76,7 +80,7 @@ export function convert<T, O>(Target: ClassConstructor<T>, array: O[]): T[] {
       }
     }
 
-    if (Object.keys(instance).length) {
+    if (Object.keys(instance).length && propertyCount !== 0) {
       result.push(instance);
     }
   }
