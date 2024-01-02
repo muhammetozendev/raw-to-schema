@@ -205,4 +205,4 @@ export function StringTransformer(value: any): string | null {
 }
 ```
 
-`BooleanTransformer` is aimed at converting boolean values that come from the database driver (0,1,true,false etc) and convert them to actual boolean value in javascript. The other two transformers are obviously converting to `Number` and `String`
+`BooleanTransformer` is aimed at converting boolean values that come from the database driver (0,1,true,false etc) and convert them to actual boolean value in javascript. The other two transformers are obviously converting to `Number` and `String`.
