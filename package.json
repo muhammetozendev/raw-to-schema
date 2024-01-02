@@ -1,0 +1,41 @@
+{
+  "name": "raw-to-schema",
+  "version": "1.0.0",
+  "description": "A node package that converts raw data to schema with nested structure",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && mocha \"dist/test/**/*.js\""
+  },
+  "keywords": [
+    "schema",
+    "raw",
+    "join",
+    "nested",
+    "nesting"
+  ],
+  "author": "Muhammet Özen <muhammed_ozenn@hotmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.6",
+    "expect": "^29.7.0",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/src",
+    "README.md",
+    "LICENSE"
+  ]
+}
