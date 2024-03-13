@@ -1,4 +1,4 @@
-import { ClassConstructor } from './types';
+import { ClassConstructor, RemoveOptions } from './types';
 import { classMetadataStorage } from './storage';
 import { group } from './utils';
 
@@ -41,7 +41,21 @@ function convertObject<T, O>(Target: ClassConstructor<T>, array: O[]): T {
   return Object.keys(instance).length && propertyCount !== 0 ? instance : null;
 }
 
-export function convert<T, O>(Target: ClassConstructor<T>, array: O[]): T[] {
+function removeProperties<T>(object: T, options: RemoveOptions<T>) {
+  for (const key in options) {
+    if (options[key] === true) {
+      delete object[key];
+    } else if (typeof options[key] === 'object') {
+      removeProperties(object[key], options[key]);
+    }
+  }
+}
+
+export function convert<T, O>(
+  Target: ClassConstructor<T>,
+  array: O[],
+  remove?: RemoveOptions<T>
+): T[] {
   const metadata = classMetadataStorage.get(Target);
   const keys = [];
   const keyMap: Record<string, string> = {};
@@ -81,11 +95,22 @@ export function convert<T, O>(Target: ClassConstructor<T>, array: O[]): T[] {
     }
 
     if (Object.keys(instance).length && propertyCount !== 0) {
+      if (remove) {
+        removeProperties(instance, remove);
+      }
       result.push(instance);
     }
   }
 
   return result;
+}
+
+export function convertOne<T, O>(
+  Target: ClassConstructor<T>,
+  array: O[],
+  remove?: RemoveOptions<T>
+): T | null {
+  return convert(Target, array, remove)[0] ?? null;
 }
 
 export * from './decorators';
